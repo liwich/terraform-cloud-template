@@ -1,0 +1,54 @@
+# Terraform Cloud Configuration
+tfc_organization = "my-org"  # Your Terraform Cloud organization
+environment      = "dev"     # dev, staging, or prod
+
+# AWS Configuration
+aws_region = "us-east-1"
+
+# Application Configuration
+app_name        = "my-app"
+container_image = "nginx:latest"  # Replace with your Docker image
+container_port  = 80
+
+# Task Configuration
+cpu    = "256"   # 256, 512, 1024, 2048, 4096
+memory = "512"   # Must be compatible with CPU
+
+# Scaling Configuration
+desired_count = 2
+
+# Auto Scaling
+enable_autoscaling      = true
+autoscaling_min_capacity = 1
+autoscaling_max_capacity = 4
+autoscaling_cpu_target   = 70
+autoscaling_memory_target = 80
+
+# Optional: Environment variables for container
+container_environment = [
+  {
+    name  = "ENVIRONMENT"
+    value = "dev"
+  },
+  {
+    name  = "LOG_LEVEL"
+    value = "info"
+  }
+]
+
+# Optional: Custom health check
+health_check_command = ["CMD-SHELL", "curl -f http://localhost/ || exit 1"]
+
+# Monitoring
+enable_container_insights = false  # Set to true for enhanced monitoring (additional cost)
+log_retention_days        = 7
+
+# Debugging
+enable_execute_command = false  # Set to true to enable ECS Exec for debugging
+
+# Tags
+tags = {
+  Project = "my-project"
+  Team    = "platform"
+  Owner   = "devops@example.com"
+}

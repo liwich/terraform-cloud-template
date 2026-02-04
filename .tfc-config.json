@@ -1,0 +1,9 @@
+{
+  "organization": "liwich",
+  "project": "infrastructure",
+  "workspaces": {
+    "dev": "infrastructure-dev",
+    "staging": "infrastructure-staging",
+    "prod": "infrastructure-prod"
+  }
+}

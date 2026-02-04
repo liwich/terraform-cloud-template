@@ -1,0 +1,95 @@
+name: Terraform Apply
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'environments/**'
+      - 'modules/**'
+
+env:
+  TF_VERSION: '1.6.0'
+
+jobs:
+  detect-changes:
+    name: Detect Changed Environments
+    runs-on: ubuntu-latest
+    outputs:
+      environments: ${{ steps.set-matrix.outputs.environments }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Detect changed environments
+        id: set-matrix
+        run: |
+          # Get changed files in last commit
+          changed_files=$(git diff --name-only HEAD~1 HEAD)
+          
+          # Initialize environments array
+          environments="[]"
+          
+          # Check each environment
+          for env in dev staging prod; do
+            if echo "$changed_files" | grep -q "^environments/$env/\|^modules/"; then
+              if [ "$environments" = "[]" ]; then
+                environments="[\"$env\"]"
+              else
+                environments=$(echo "$environments" | sed "s/]/, \"$env\"]/")
+              fi
+            fi
+          done
+          
+          echo "environments=$environments" >> $GITHUB_OUTPUT
+          echo "Changed environments: $environments"
+
+  terraform-apply:
+    name: Apply - ${{ matrix.environment }}
+    needs: detect-changes
+    if: needs.detect-changes.outputs.environments != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: ${{ fromJson(needs.detect-changes.outputs.environments) }}
+      max-parallel: 1  # Apply environments sequentially
+    
+    environment:
+      name: ${{ matrix.environment }}
+    
+    defaults:
+      run:
+        working-directory: environments/${{ matrix.environment }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -input=false
+
+      - name: Terraform Apply
+        id: apply
+        run: terraform apply -auto-approve -input=false
+
+      - name: Summary
+        run: |
+          echo "### Terraform Apply - ${{ matrix.environment }} ✅" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Applied changes to **${{ matrix.environment }}** environment" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Author:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY

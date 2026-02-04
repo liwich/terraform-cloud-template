@@ -1,0 +1,125 @@
+name: Terraform Plan
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'environments/**'
+      - 'modules/**'
+      - '.github/workflows/terraform-plan.yml'
+
+env:
+  TF_VERSION: '1.6.0'
+
+jobs:
+  detect-changes:
+    name: Detect Changed Environments
+    runs-on: ubuntu-latest
+    outputs:
+      environments: ${{ steps.set-matrix.outputs.environments }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed environments
+        id: set-matrix
+        run: |
+          # Get changed files
+          changed_files=$(git diff --name-only origin/main...HEAD)
+          
+          # Initialize environments array
+          environments="[]"
+          
+          # Check each environment
+          for env in dev staging prod; do
+            if echo "$changed_files" | grep -q "^environments/$env/\|^modules/"; then
+              if [ "$environments" = "[]" ]; then
+                environments="[\"$env\"]"
+              else
+                environments=$(echo "$environments" | sed "s/]/, \"$env\"]/")
+              fi
+            fi
+          done
+          
+          echo "environments=$environments" >> $GITHUB_OUTPUT
+          echo "Changed environments: $environments"
+
+  terraform-plan:
+    name: Plan - ${{ matrix.environment }}
+    needs: detect-changes
+    if: needs.detect-changes.outputs.environments != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: ${{ fromJson(needs.detect-changes.outputs.environments) }}
+    
+    defaults:
+      run:
+        working-directory: environments/${{ matrix.environment }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Terraform Format Check
+        id: fmt
+        run: terraform fmt -check -recursive
+        continue-on-error: true
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color -input=false
+        continue-on-error: true
+
+      - name: Comment PR
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        env:
+          PLAN: "${{ steps.plan.outputs.stdout }}"
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `#### Terraform Plan - \`${{ matrix.environment }}\` 🔍
+            
+            #### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+            
+            <details><summary>Show Plan</summary>
+            
+            \`\`\`terraform
+            ${process.env.PLAN}
+            \`\`\`
+            
+            </details>
+            
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`environments/${{ matrix.environment }}\`, Workflow: \`${{ github.workflow }}\`*`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+
+      - name: Fail if plan failed
+        if: steps.plan.outcome == 'failure'
+        run: exit 1

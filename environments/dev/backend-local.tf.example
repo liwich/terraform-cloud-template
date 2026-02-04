@@ -1,0 +1,11 @@
+# Example local backend configuration for testing
+# Rename to backend.tf to use local state instead of Terraform Cloud
+# DO NOT commit backend.tf with local configuration
+
+terraform {
+  backend "local" {
+    path = "terraform.tfstate"
+  }
+  
+  required_version = "~> 1.6.0"
+}
