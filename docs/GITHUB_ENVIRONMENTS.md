@@ -2,7 +2,7 @@
 
 This guide explains how to set up GitHub Environments for deployment protection and manual approvals.
 
-## 📋 Table of Contents
+##  Table of Contents
 
 - [What Are GitHub Environments?](#what-are-github-environments)
 - [Quick Setup](#quick-setup)
@@ -16,11 +16,11 @@ This guide explains how to set up GitHub Environments for deployment protection 
 
 GitHub Environments provide:
 
-- **🔒 Protection Rules** - Require approvals before deployment
-- **📊 Deployment History** - Track all deployments per environment
-- **🔐 Environment Secrets** - Scope secrets to specific environments
+- ** Protection Rules** - Require approvals before deployment
+- ** Deployment History** - Track all deployments per environment
+- ** Environment Secrets** - Scope secrets to specific environments
 - **⏰ Wait Timers** - Add delays before deployment
-- **👥 Reviewers** - Require specific people/teams to approve
+- ** Reviewers** - Require specific people/teams to approve
 
 ---
 
@@ -46,7 +46,7 @@ Create three environments:
 ```
 Environment name: dev
 Protection rules: None
-✅ Allow administrators to bypass
+ Allow administrators to bypass
 ```
 
 **Why?** Dev should deploy automatically for fast iteration.
@@ -59,13 +59,13 @@ Protection rules: None
 Environment name: staging
 
 Protection rules:
-✅ Required reviewers (1-6 reviewers)
+ Required reviewers (1-6 reviewers)
    └─ Select: Your team or specific users
    
 Optional:
 □ Prevent self-review
 □ Wait timer: 0 minutes
-✅ Allow administrators to bypass (for emergencies)
+ Allow administrators to bypass (for emergencies)
 ```
 
 **Recommended Reviewers:**
@@ -81,15 +81,15 @@ Optional:
 Environment name: prod
 
 Protection rules:
-✅ Required reviewers (2-6 reviewers)
+ Required reviewers (2-6 reviewers)
    └─ Select: Senior engineers + team lead
    
-✅ Prevent self-review (person who triggered can't approve)
+ Prevent self-review (person who triggered can't approve)
 
 Optional but recommended:
-✅ Wait timer: 10 minutes (cooling-off period)
-✅ Deployment branches: Only 'main' branch
-✅ Allow administrators to bypass (for emergencies)
+ Wait timer: 10 minutes (cooling-off period)
+ Deployment branches: Only 'main' branch
+ Allow administrators to bypass (for emergencies)
 ```
 
 **Recommended Reviewers:**
@@ -129,9 +129,9 @@ prod:     @senior-engineers (2 approvals)
 **Purpose:** Prevent the person who triggered the deployment from approving it
 
 **When to use:**
-- ✅ Production environment (always)
-- ✅ Staging environment (recommended)
-- ❌ Dev environment (not needed)
+-  Production environment (always)
+-  Staging environment (recommended)
+-  Dev environment (not needed)
 
 ---
 
@@ -185,14 +185,14 @@ git push origin main
 ### 2. Dev Deploys Automatically
 
 ```
-✅ Dev environment: Deploys immediately (no approval needed)
+ Dev environment: Deploys immediately (no approval needed)
 ```
 
 You'll see in GitHub Actions:
 ```
-Apply - dev: ✅ Running
-Apply - staging: ⏸️  Waiting for approval
-Apply - prod: ⏸️  Waiting for approval
+Apply - dev:  Running
+Apply - staging: ⏸  Waiting for approval
+Apply - prod: ⏸  Waiting for approval
 ```
 
 ---
@@ -209,10 +209,10 @@ Apply - prod: ⏸️  Waiting for approval
 1. Go to: `Actions → Select the workflow run`
 2. Click "Review deployments"
 3. Select environments to approve:
-   - ☑️ staging
+   - ☑ staging
 4. Click "Approve and deploy"
 
-**Staging deploys immediately after approval** ✅
+**Staging deploys immediately after approval** 
 
 ---
 
@@ -223,15 +223,15 @@ Apply - prod: ⏸️  Waiting for approval
 1. Reviewer goes to: `Actions → Select the workflow run`
 2. Click "Review deployments"
 3. Review:
-   - ✅ Staging deployed successfully
-   - ✅ Changes look good
-   - ✅ Tests passed
+   -  Staging deployed successfully
+   -  Changes look good
+   -  Tests passed
 4. Select:
-   - ☑️ prod
+   - ☑ prod
 5. **Wait 10 minutes** (if wait timer configured)
 6. Click "Approve and deploy"
 
-**Prod deploys after approval + wait timer** ✅
+**Prod deploys after approval + wait timer** 
 
 ---
 
@@ -244,11 +244,11 @@ Repository → Environments → [environment] → View deployment history
 ```
 
 **You'll see:**
-- ✅ Successful deployments
-- ❌ Failed deployments
-- ⏸️  Pending approvals
-- 👤 Who approved
-- ⏱️  Duration
+-  Successful deployments
+-  Failed deployments
+- ⏸  Pending approvals
+-  Who approved
+- ⏱  Duration
 
 ---
 
@@ -278,15 +278,15 @@ DATADOG_API_KEY: [prod monitoring]
 ```
 
 **Benefits:**
-- ✅ Separate credentials per environment
-- ✅ More secure than repository-wide secrets
-- ✅ Easier to rotate credentials
+-  Separate credentials per environment
+-  More secure than repository-wide secrets
+-  Easier to rotate credentials
 
 ---
 
 ## Best Practices
 
-### ✅ Do's
+###  Do's
 
 1. **Always protect production**
    - Require 2+ approvals
@@ -311,7 +311,7 @@ DATADOG_API_KEY: [prod monitoring]
 
 ---
 
-### ❌ Don'ts
+###  Don'ts
 
 1. **Don't protect dev**
    - Slows down development
@@ -352,7 +352,7 @@ Settings → Environments
 ```
 Environment: dev
 Protection rules: Leave all unchecked
-✅ Save protection rules
+ Save protection rules
 ```
 
 ---
@@ -362,13 +362,13 @@ Protection rules: Leave all unchecked
 ```
 Environment: staging
 
-☑️ Required reviewers
+☑ Required reviewers
    └─ Add reviewers: @your-team or specific users
    └─ Required reviewers: 1
 
-☑️ Allow administrators to bypass
+☑ Allow administrators to bypass
 
-✅ Save protection rules
+ Save protection rules
 ```
 
 ---
@@ -378,20 +378,20 @@ Environment: staging
 ```
 Environment: prod
 
-☑️ Required reviewers
+☑ Required reviewers
    └─ Add reviewers: @senior-engineers (or specific users)
    └─ Required reviewers: 2
 
-☑️ Prevent self-review
+☑ Prevent self-review
 
-☑️ Wait timer: 10 minutes
+☑ Wait timer: 10 minutes
 
-☑️ Deployment branches
+☑ Deployment branches
    └─ Protected branches: main
 
-☑️ Allow administrators to bypass
+☑ Allow administrators to bypass
 
-✅ Save protection rules
+ Save protection rules
 ```
 
 ---
@@ -408,13 +408,13 @@ git commit -m "Test deployment workflow"
 git push origin main
 
 # Watch in GitHub Actions:
-# 1. Dev deploys automatically ✅
-# 2. Staging waits for approval ⏸️
-# 3. Prod waits for approval ⏸️
+# 1. Dev deploys automatically 
+# 2. Staging waits for approval ⏸
+# 3. Prod waits for approval ⏸
 
 # Go to Actions → Select workflow → Review deployments
-# Approve staging → ✅ Deploys
-# Approve prod → ⏰ Waits 10 min → ✅ Deploys
+# Approve staging →  Deploys
+# Approve prod → ⏰ Waits 10 min →  Deploys
 ```
 
 ---
@@ -426,19 +426,19 @@ git push origin main
 ```
 0:00  Developer pushes to main
 0:01  GitHub Actions starts
-0:02  Dev environment deploys ✅
-0:02  Staging waits for approval ⏸️
+0:02  Dev environment deploys 
+0:02  Staging waits for approval ⏸
 
 [Developer tests in dev, confirms working]
 
 0:15  Reviewer approves staging
-0:16  Staging deploys ✅
+0:16  Staging deploys 
 
 [Team tests in staging, confirms working]
 
 0:30  Reviewer approves prod
 0:30  Wait timer starts (10 minutes) ⏰
-0:40  Prod deploys ✅
+0:40  Prod deploys 
 
 Total time: 40 minutes (safe and controlled)
 ```
@@ -474,8 +474,8 @@ Settings → Environments → [environment] → Required reviewers → Add revie
 **Cause:** "Prevent self-review" is enabled
 
 **Fix:**
-- ✅ This is correct behavior! Ask another team member
-- ⚠️ Or temporarily disable in settings (not recommended)
+-  This is correct behavior! Ask another team member
+-  Or temporarily disable in settings (not recommended)
 
 ---
 
@@ -484,8 +484,8 @@ Settings → Environments → [environment] → Required reviewers → Add revie
 **Cause:** Wait timer is configured
 
 **Fix:**
-- ✅ Wait for the timer to expire (intended behavior)
-- ⚠️ Or reduce wait timer in environment settings
+-  Wait for the timer to expire (intended behavior)
+-  Or reduce wait timer in environment settings
 
 ---
 
@@ -527,21 +527,21 @@ Value (prod): us-west-2
 
 | Feature | Dev | Staging | Prod |
 |---------|-----|---------|------|
-| Auto-deploy | ✅ Yes | ❌ No | ❌ No |
+| Auto-deploy |  Yes |  No |  No |
 | Required approvals | 0 | 1 | 2 |
-| Self-review prevention | ❌ | ✅ | ✅ |
+| Self-review prevention |  |  |  |
 | Wait timer | 0 min | 0 min | 10 min |
 | Branch restriction | All | main, release/* | main only |
-| Deployment visibility | ✅ | ✅ | ✅ |
+| Deployment visibility |  |  |  |
 
 ---
 
 ## Next Steps
 
-1. ✅ [Create environments in GitHub](#step-by-step-first-time-setup)
-2. ✅ [Configure protection rules](#environment-protection-rules)
-3. ✅ [Test the workflow](#5-test-the-workflow-5-minutes)
-4. ✅ [Monitor deployments](#deployment-history)
+1.  [Create environments in GitHub](#step-by-step-first-time-setup)
+2.  [Configure protection rules](#environment-protection-rules)
+3.  [Test the workflow](#5-test-the-workflow-5-minutes)
+4.  [Monitor deployments](#deployment-history)
 
 **Related Documentation:**
 - [GitHub Actions Setup](../GITHUB_ACTIONS_SETUP.md)

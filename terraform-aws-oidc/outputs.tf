@@ -17,7 +17,7 @@ output "setup_instructions" {
   description = "Instructions for using this role in GitHub Actions"
   value       = <<-EOT
   
-  ✅ OIDC Setup Complete!
+  OIDC Setup Complete!
   
   Add this to your GitHub Actions workflow:
   

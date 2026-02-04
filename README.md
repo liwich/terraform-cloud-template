@@ -2,7 +2,7 @@
 
 A production-ready template for quickly setting up infrastructure with Terraform Cloud. This template automates the creation of Terraform Cloud workspaces and provides best-practice AWS infrastructure modules.
 
-## 🚀 Features
+##  Features
 
 - **Zero-friction Setup**: Single command creates entire Terraform Cloud workspace structure
 - **Security-First**: Comprehensive `.gitignore` preventing secret exposure
@@ -12,7 +12,7 @@ A production-ready template for quickly setting up infrastructure with Terraform
 - **Remote State**: Shared infrastructure via Terraform Cloud remote state
 - **Microservice Pattern**: Example for consuming shared infrastructure in separate repos
 
-## 📋 Prerequisites
+##  Prerequisites
 
 - [Terraform](https://www.terraform.io/downloads) (>= 1.6.0)
 - [Terraform Cloud Account](https://app.terraform.io/signup/account) (free tier available)
@@ -83,9 +83,9 @@ git commit -m "Initial setup"
 git push origin main
 ```
 
-GitHub Actions will automatically deploy infrastructure! 🚀
+GitHub Actions will automatically deploy infrastructure! 
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 terraform-cloud-template/
@@ -115,7 +115,7 @@ terraform-cloud-template/
     └── TROUBLESHOOTING.md       # Common issues and solutions
 ```
 
-## 🏗️ Infrastructure Modules
+##  Infrastructure Modules
 
 ### VPC Module
 Creates a production-ready VPC with:
@@ -139,7 +139,7 @@ Creates a production-ready VPC with:
 - DynamoDB table with encryption
 - Public access blocked by default
 
-## 🔄 CI/CD Integration
+##  CI/CD Integration
 
 This template provides **two automation approaches**. Choose based on your organization's needs:
 
@@ -150,9 +150,9 @@ This template provides **two automation approaches**. Choose based on your organ
 Pre-configured workflows included:
 - **On Pull Request** (`terraform-plan.yml`): Validates and plans changes, posts to PR
 - **On Merge** (`terraform-apply.yml`): Automatically applies with environment protection
-  - **Dev**: Auto-deploys immediately ✅
-  - **Staging**: Requires 1 approval ⏸️
-  - **Prod**: Requires 2 approvals + wait timer ⏸️
+  - **Dev**: Auto-deploys immediately 
+  - **Staging**: Requires 1 approval ⏸
+  - **Prod**: Requires 2 approvals + wait timer ⏸
 
 **Setup**:
 1. **Create GitHub Environments** (5 minutes)
@@ -166,7 +166,7 @@ Pre-configured workflows included:
 2. Add `TF_API_TOKEN` to GitHub Secrets (Settings → Secrets → Actions)
 3. Push to GitHub - workflows run automatically!
 
-📖 **[Full Setup Guide: GitHub Environments](docs/GITHUB_ENVIRONMENTS.md)**
+ **[Full Setup Guide: GitHub Environments](docs/GITHUB_ENVIRONMENTS.md)**
 
 ### Alternative: VCS-Driven Workflow (Enterprise)
 
@@ -180,24 +180,24 @@ Pre-configured workflows included:
 
 | Use GitHub Actions If... | Use VCS-Driven If... |
 |--------------------------|----------------------|
-| ✅ Need custom validation | ✅ Want simplest setup |
-| ✅ Complex approval flows | ✅ Prefer HashiCorp native |
-| ✅ Multi-tool integration | ✅ Enterprise governance focus |
-| ✅ Maximum flexibility | ✅ Large distributed teams |
+|  Need custom validation |  Want simplest setup |
+|  Complex approval flows |  Prefer HashiCorp native |
+|  Multi-tool integration |  Enterprise governance focus |
+|  Maximum flexibility |  Large distributed teams |
 
 **Both approaches are production-ready.** The default (GitHub Actions) offers more flexibility, while VCS-driven provides tighter Terraform Cloud integration. 
 
-📊 **Need help deciding?** See [Workflow Comparison Guide](docs/WORKFLOW_COMPARISON.md) for detailed analysis by team size, use case, and requirements.
+ **Need help deciding?** See [Workflow Comparison Guide](docs/WORKFLOW_COMPARISON.md) for detailed analysis by team size, use case, and requirements.
 
-## 🔐 Security Best Practices
+##  Security Best Practices
 
 ### AWS Authentication (OIDC)
 
 **Setup script automatically configures OIDC:**
-- ✅ No long-lived credentials
-- ✅ Automatic credential rotation  
-- ✅ Enhanced security
-- ✅ AWS best practice
+-  No long-lived credentials
+-  Automatic credential rotation  
+-  Enhanced security
+-  AWS best practice
 
 The `setup.sh` script will:
 1. Check for AWS CLI
@@ -221,7 +221,7 @@ The `.gitignore` prevents committing:
 - Environment files (`.env`)
 - Terraform Cloud tokens
 
-## 🔗 Consuming Shared Infrastructure
+##  Consuming Shared Infrastructure
 
 See [`example-microservice/`](../example-microservice) for a complete example of how to consume the VPC and other shared resources in a separate microservice repository.
 
@@ -248,7 +248,7 @@ resource "aws_security_group" "app" {
 
 For detailed guidance, see [docs/CONSUMING_INFRASTRUCTURE.md](docs/CONSUMING_INFRASTRUCTURE.md)
 
-## 📚 Documentation
+##  Documentation
 
 - **[Setup Guide](docs/SETUP_GUIDE.md)** - Detailed setup instructions and configuration
 - **[Token Management](docs/TOKEN_MANAGEMENT.md)** - Managing and rotating Terraform Cloud tokens
@@ -261,7 +261,7 @@ For detailed guidance, see [docs/CONSUMING_INFRASTRUCTURE.md](docs/CONSUMING_INF
 - **[Consuming Infrastructure](docs/CONSUMING_INFRASTRUCTURE.md)** - How to use shared resources
 - **[Troubleshooting](docs/TROUBLESHOOTING.md)** - Common issues and solutions
 
-## 🛠️ Common Commands
+##  Common Commands
 
 ```bash
 # Initialize Terraform (run once per environment)
@@ -283,7 +283,7 @@ terraform fmt -recursive
 terraform validate
 ```
 
-## 🌍 Multi-Environment Strategy
+##  Multi-Environment Strategy
 
 Each environment has:
 - Separate Terraform Cloud workspace
@@ -305,11 +305,11 @@ Each environment has:
 5. Review the Terraform plan in PR comments
 6. Merge after approval
 
-## 📝 License
+##  License
 
 This template is provided as-is for use in your projects.
 
-## 🆘 Support
+##  Support
 
 - Check [Troubleshooting Guide](docs/TROUBLESHOOTING.md)
 - [Terraform Cloud Documentation](https://www.terraform.io/cloud-docs)

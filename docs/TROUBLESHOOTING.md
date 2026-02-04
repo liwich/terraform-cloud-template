@@ -329,19 +329,19 @@ The directory could not be read for module "vpc" at main.tf:24.
 
 **Solution**:
 
-✅ **For GitHub Actions** (already fixed in this template):
+ **For GitHub Actions** (already fixed in this template):
 The workflows use `terraform -chdir=environments/dev` instead of setting `working-directory`. This ensures the entire repository is uploaded to Terraform Cloud.
 
 ```yaml
-# ✅ Correct - uploads entire repo
+#  Correct - uploads entire repo
 - run: terraform -chdir=environments/dev init
 
-# ❌ Wrong - only uploads environments/dev
+#  Wrong - only uploads environments/dev
 working-directory: environments/dev
 - run: terraform init
 ```
 
-✅ **For Local CLI Usage**:
+ **For Local CLI Usage**:
 Run from the project root using `-chdir`:
 ```bash
 # From project root
@@ -350,7 +350,7 @@ terraform -chdir=environments/dev plan
 terraform -chdir=environments/dev apply
 ```
 
-✅ **Alternative: Use Local Execution Mode**:
+ **Alternative: Use Local Execution Mode**:
 In Terraform Cloud workspace settings:
 1. Settings → General → Execution Mode
 2. Change from "Remote" to "Local"
@@ -366,12 +366,12 @@ In Terraform Cloud workspace settings:
 
 **Solution**:
 ```hcl
-# ❌ Wrong
+#  Wrong
 module "vpc" {
   source = "../modules/vpc"  # Wrong relative path
 }
 
-# ✅ Correct (from environment directory)
+#  Correct (from environment directory)
 module "vpc" {
   source = "../../modules/vpc"
 }
@@ -402,12 +402,12 @@ variable "vpc_cidr" {
 
 **Solution**:
 ```hcl
-# ❌ Wrong: null value
+#  Wrong: null value
 resource "aws_subnet" "private" {
   for_each = var.subnet_cidrs  # If null, this fails
 }
 
-# ✅ Correct: Handle null
+#  Correct: Handle null
 resource "aws_subnet" "private" {
   for_each = var.subnet_cidrs != null ? var.subnet_cidrs : []
 }
@@ -723,16 +723,16 @@ terraform plan -no-color | tee plan.txt
 
 ### Best practices to avoid issues:
 
-1. ✅ Always run `terraform plan` before `apply`
-2. ✅ Use version control for all Terraform code
-3. ✅ Never edit state files manually
-4. ✅ Keep Terraform and providers updated
-5. ✅ Use consistent formatting (`terraform fmt`)
-6. ✅ Review changes in pull requests
-7. ✅ Test in dev before applying to prod
-8. ✅ Keep sensitive data out of version control
-9. ✅ Document custom configurations
-10. ✅ Regular backups (Terraform Cloud does this automatically)
+1.  Always run `terraform plan` before `apply`
+2.  Use version control for all Terraform code
+3.  Never edit state files manually
+4.  Keep Terraform and providers updated
+5.  Use consistent formatting (`terraform fmt`)
+6.  Review changes in pull requests
+7.  Test in dev before applying to prod
+8.  Keep sensitive data out of version control
+9.  Document custom configurations
+10.  Regular backups (Terraform Cloud does this automatically)
 
 ## Still Stuck?
 

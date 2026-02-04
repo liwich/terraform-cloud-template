@@ -138,14 +138,14 @@ chmod +x scripts/setup.sh
 ```
 
 The script will:
-1. ✓ Validate prerequisites (Terraform, Python)
-2. ✓ Prompt for Terraform Cloud credentials
-3. ✓ Create Python virtual environment
-4. ✓ Install dependencies
-5. ✓ Create project in Terraform Cloud
-6. ✓ Create workspaces (dev, staging, prod)
-7. ✓ Configure backend files
-8. ✓ Optionally set AWS credentials
+1.  Validate prerequisites (Terraform, Python)
+2.  Prompt for Terraform Cloud credentials
+3.  Create Python virtual environment
+4.  Install dependencies
+5.  Create project in Terraform Cloud
+6.  Create workspaces (dev, staging, prod)
+7.  Configure backend files
+8.  Optionally set AWS credentials
 
 ### Script Prompts
 
@@ -411,10 +411,10 @@ See [CONSUMING_INFRASTRUCTURE.md](CONSUMING_INFRASTRUCTURE.md) for details on:
 The template includes pre-configured GitHub Actions workflows. This is **API-driven** automation that gives you maximum flexibility.
 
 **Advantages**:
-- ✅ Easier initial setup
-- ✅ More control over workflows
-- ✅ Custom validation steps
-- ✅ Works with any Git provider
+-  Easier initial setup
+-  More control over workflows
+-  Custom validation steps
+-  Works with any Git provider
 
 **Setup**: Just add `TF_API_TOKEN` to GitHub Secrets and push!
 
@@ -423,10 +423,10 @@ The template includes pre-configured GitHub Actions workflows. This is **API-dri
 For organizations preferring HashiCorp's native approach, you can configure **VCS-driven workflow** where Terraform Cloud directly monitors your repository.
 
 **Advantages**:
-- ✅ Native Terraform Cloud integration
-- ✅ Simpler team onboarding
-- ✅ HashiCorp recommended for enterprise
-- ✅ Built-in run queuing
+-  Native Terraform Cloud integration
+-  Simpler team onboarding
+-  HashiCorp recommended for enterprise
+-  Built-in run queuing
 
 **Setup**: See detailed guide: [VCS Integration](VCS_INTEGRATION.md)
 
@@ -442,12 +442,12 @@ Both approaches are production-ready and secure.
 
 ## Next Steps
 
-1. ✓ Review [Terraform Cloud Concepts](TERRAFORM_CLOUD.md)
-2. ✓ Choose automation approach (default is fine for most)
-3. ✓ [Optional] Set up [VCS Integration](VCS_INTEGRATION.md) if preferred
-4. ✓ Customize infrastructure for your needs
-5. ✓ Create additional modules as needed
-6. ✓ Review [Troubleshooting Guide](TROUBLESHOOTING.md)
+1.  Review [Terraform Cloud Concepts](TERRAFORM_CLOUD.md)
+2.  Choose automation approach (default is fine for most)
+3.  [Optional] Set up [VCS Integration](VCS_INTEGRATION.md) if preferred
+4.  Customize infrastructure for your needs
+5.  Create additional modules as needed
+6.  Review [Troubleshooting Guide](TROUBLESHOOTING.md)
 
 ## Additional Resources
 

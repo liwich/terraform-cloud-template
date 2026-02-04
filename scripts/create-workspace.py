@@ -45,7 +45,7 @@ class TerraformCloudAPI:
                 projects = response.json().get("data", [])
                 for project in projects:
                     if project["attributes"]["name"] == project_name:
-                        print(f"✓ Project '{project_name}' already exists")
+                        print(f" Project '{project_name}' already exists")
                         return project["id"]
         except Exception as e:
             print(f"Warning: Error checking existing projects: {e}")
@@ -69,7 +69,7 @@ class TerraformCloudAPI:
             
             if response.status_code == 201:
                 project_id = response.json()["data"]["id"]
-                print(f"✓ Created project '{project_name}'")
+                print(f" Created project '{project_name}'")
                 return project_id
             else:
                 print(f"Error creating project: {response.status_code} - {response.text}")
@@ -94,7 +94,7 @@ class TerraformCloudAPI:
             )
             
             if response.status_code == 200:
-                print(f"✓ Workspace '{workspace_name}' already exists")
+                print(f" Workspace '{workspace_name}' already exists")
                 return response.json()["data"]
         except:
             pass
@@ -132,7 +132,7 @@ class TerraformCloudAPI:
             
             if response.status_code == 201:
                 workspace = response.json()["data"]
-                print(f"✓ Created workspace '{workspace_name}'")
+                print(f" Created workspace '{workspace_name}'")
                 return workspace
             else:
                 print(f"Error creating workspace: {response.status_code} - {response.text}")
@@ -192,16 +192,16 @@ class TerraformCloudAPI:
                 
                 if response.status_code == 201:
                     key_display = var["key"] if not var["sensitive"] else f"{var['key']} (sensitive)"
-                    print(f"  ✓ Set variable: {key_display}")
+                    print(f"   Set variable: {key_display}")
                 else:
                     # Variable might already exist
                     if "already exists" in response.text.lower():
                         print(f"  - Variable {var['key']} already exists")
                     else:
-                        print(f"  ✗ Error setting {var['key']}: {response.status_code}")
+                        print(f"   Error setting {var['key']}: {response.status_code}")
                         success = False
             except Exception as e:
-                print(f"  ✗ Error setting variable: {e}")
+                print(f"   Error setting variable: {e}")
                 success = False
         
         return success
@@ -231,15 +231,15 @@ def main():
     
     # Validate token
     if not api.validate_token():
-        print("✗ Invalid Terraform Cloud token")
+        print(" Invalid Terraform Cloud token")
         sys.exit(1)
-    print("✓ Token validated")
+    print(" Token validated")
     
     # Create or get project
     print(f"\nCreating project '{project_name}'...")
     project_id = api.get_or_create_project(project_name)
     if not project_id:
-        print("✗ Failed to create project")
+        print(" Failed to create project")
         sys.exit(1)
     
     # Create workspaces for each environment
@@ -278,30 +278,30 @@ def main():
     config_file = "../.tfc-config.json"
     with open(config_file, "w") as f:
         json.dump(config, f, indent=2)
-    print(f"\n✓ Configuration saved to {config_file}")
+    print(f"\n Configuration saved to {config_file}")
     
     print("\n" + "=" * 60)
-    print("🎉 Terraform Cloud Workspaces Created!")
+    print(" Terraform Cloud Workspaces Created!")
     print("=" * 60)
-    print("\n📋 Next Steps for GitHub Actions CI/CD:")
-    print("\n1️⃣  CREATE TEAM TOKEN:")
+    print("\n Next Steps for GitHub Actions CI/CD:")
+    print("\n1⃣  CREATE TEAM TOKEN:")
     print(f"   • Go to: https://app.terraform.io/app/{tfc_org}/settings/teams")
     print("   • Create team: 'github-actions'")
     print("   • Generate team token (set to 'Never' expire)")
     print("   • Copy the token")
-    print("\n2️⃣  GRANT TEAM ACCESS TO WORKSPACES:")
+    print("\n2⃣  GRANT TEAM ACCESS TO WORKSPACES:")
     for env, workspace in workspaces.items():
         ws_name = workspace['attributes']['name']
         print(f"   • {ws_name}: Add 'github-actions' team with 'Write' permission")
     print(f"   • URL: https://app.terraform.io/app/{tfc_org}/workspaces/[workspace]/settings/access")
-    print("\n3️⃣  ADD TOKEN TO GITHUB SECRETS:")
+    print("\n3⃣  ADD TOKEN TO GITHUB SECRETS:")
     print("   • GitHub repo → Settings → Secrets → Actions")
     print("   • New secret: TF_API_TOKEN")
     print("   • Paste the team token")
-    print("\n4️⃣  PUSH YOUR CODE:")
+    print("\n4⃣  PUSH YOUR CODE:")
     print("   git push origin main")
     print("   (GitHub Actions will automatically deploy!)")
-    print("\n📖 Full guide: docs/TOKEN_MANAGEMENT.md")
+    print("\n Full guide: docs/TOKEN_MANAGEMENT.md")
 
 
 if __name__ == "__main__":

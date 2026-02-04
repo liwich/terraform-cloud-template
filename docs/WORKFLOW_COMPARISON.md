@@ -8,23 +8,23 @@ Quick reference guide to help you choose between GitHub Actions (API-driven) and
 ┌─────────────────────────────────────────────────────────────┐
 │                    Choose GitHub Actions If:                │
 ├─────────────────────────────────────────────────────────────┤
-│ ✅ You need custom validation steps before Terraform        │
-│ ✅ You want maximum flexibility in your CI/CD pipeline      │
-│ ✅ You're managing multiple tools beyond Terraform          │
-│ ✅ You need complex approval workflows                      │
-│ ✅ You want faster initial setup                            │
-│ ✅ Your team is familiar with GitHub Actions                │
+│  You need custom validation steps before Terraform        │
+│  You want maximum flexibility in your CI/CD pipeline      │
+│  You're managing multiple tools beyond Terraform          │
+│  You need complex approval workflows                      │
+│  You want faster initial setup                            │
+│  Your team is familiar with GitHub Actions                │
 └─────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────┐
 │                   Choose VCS-Driven Workflow If:            │
 ├─────────────────────────────────────────────────────────────┤
-│ ✅ You prefer HashiCorp's recommended approach              │
-│ ✅ You want simplest possible team onboarding               │
-│ ✅ You need native Terraform Cloud features (Sentinel)      │
-│ ✅ You have large distributed teams (50+ people)            │
-│ ✅ Enterprise governance is your top priority               │
-│ ✅ You prefer fewer moving parts in your automation         │
+│  You prefer HashiCorp's recommended approach              │
+│  You want simplest possible team onboarding               │
+│  You need native Terraform Cloud features (Sentinel)      │
+│  You have large distributed teams (50+ people)            │
+│  Enterprise governance is your top priority               │
+│  You prefer fewer moving parts in your automation         │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -74,14 +74,14 @@ Quick reference guide to help you choose between GitHub Actions (API-driven) and
 |---------|----------------|------------|
 | **Setup Time** | 5 minutes | 15 minutes |
 | **Setup Complexity** | Low (add secret) | Medium (OAuth) |
-| **Customization** | ✅ Unlimited | ⚠️ Limited |
-| **Pre-Terraform Steps** | ✅ Yes (lint, test, etc.) | ❌ No |
+| **Customization** |  Unlimited |  Limited |
+| **Pre-Terraform Steps** |  Yes (lint, test, etc.) |  No |
 | **Terraform Execution** | Remote (TF Cloud) | Remote (TF Cloud) |
 | **State Management** | Remote (TF Cloud) | Remote (TF Cloud) |
-| **PR Plans** | ✅ Automatic | ✅ Automatic |
-| **Plan Comments** | ✅ GitHub PR | ✅ GitHub PR |
-| **Run Queue** | Manual | ✅ Built-in |
-| **Multi-Workspace** | Custom logic | ✅ Native |
+| **PR Plans** |  Automatic |  Automatic |
+| **Plan Comments** |  GitHub PR |  GitHub PR |
+| **Run Queue** | Manual |  Built-in |
+| **Multi-Workspace** | Custom logic |  Native |
 | **Approval Process** | GitHub + TF Cloud | TF Cloud UI |
 | **Audit Trail** | GitHub + TF Cloud | Git + TF Cloud |
 | **Team Permissions** | GitHub + TF Cloud | TF Cloud |
@@ -93,7 +93,7 @@ Quick reference guide to help you choose between GitHub Actions (API-driven) and
 
 ### Scenario 1: Startup (5-10 developers)
 
-**Recommendation**: GitHub Actions ✅
+**Recommendation**: GitHub Actions 
 
 **Reasoning**:
 - Faster setup, less overhead
@@ -103,7 +103,7 @@ Quick reference guide to help you choose between GitHub Actions (API-driven) and
 
 ### Scenario 2: Enterprise (100+ developers)
 
-**Recommendation**: VCS-Driven ✅
+**Recommendation**: VCS-Driven 
 
 **Reasoning**:
 - Simpler onboarding at scale
@@ -126,7 +126,7 @@ Quick reference guide to help you choose between GitHub Actions (API-driven) and
 
 ### Scenario 4: Multi-Cloud / Multi-Tool
 
-**Recommendation**: GitHub Actions ✅
+**Recommendation**: GitHub Actions 
 
 **Reasoning**:
 - Need to orchestrate Terraform + other tools
@@ -206,7 +206,7 @@ Production: VCS-Driven (maximum governance)
 
 ## Common Misconceptions
 
-### ❌ "VCS-driven is more secure"
+###  "VCS-driven is more secure"
 
 **Reality**: Both are equally secure. Security depends on:
 - Branch protection rules
@@ -214,15 +214,15 @@ Production: VCS-Driven (maximum governance)
 - Secret management
 - Team permissions
 
-### ❌ "GitHub Actions is not production-ready"
+###  "GitHub Actions is not production-ready"
 
 **Reality**: GitHub Actions is used by millions of production deployments daily. The Terraform Cloud API is the official way to interact programmatically.
 
-### ❌ "VCS-driven is the only 'proper' way"
+###  "VCS-driven is the only 'proper' way"
 
 **Reality**: HashiCorp supports and documents all three workflows (VCS, API, CLI). Choose based on your needs.
 
-### ❌ "You must choose one forever"
+###  "You must choose one forever"
 
 **Reality**: Migration between approaches is straightforward and low-risk.
 
@@ -258,11 +258,11 @@ Production: VCS-Driven (maximum governance)
 ## Summary
 
 **There is no "wrong" choice.** Both approaches are:
-- ✅ Production-ready
-- ✅ Secure
-- ✅ Scalable
-- ✅ Well-documented
-- ✅ Supported by HashiCorp
+-  Production-ready
+-  Secure
+-  Scalable
+-  Well-documented
+-  Supported by HashiCorp
 
 **Choose based on**:
 - Team preferences

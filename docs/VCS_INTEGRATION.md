@@ -40,46 +40,46 @@ Developer → Push to Branch → GitHub Actions → Terraform Cloud API → Remo
 
 ### Use VCS-Driven Workflow When:
 
-✅ **Enterprise governance is critical**
+ **Enterprise governance is critical**
 - Need native Terraform Cloud run triggers
 - Want simplest possible setup for teams
 - Prefer HashiCorp's recommended approach
 - Using Terraform Enterprise features (Sentinel policies, etc.)
 
-✅ **Team structure favors it**
+ **Team structure favors it**
 - Large teams with many contributors
 - Need workspace-level access control
 - Want automatic run queuing
 
-✅ **Compliance requirements**
+ **Compliance requirements**
 - Need to demonstrate VCS as single source of truth
 - Auditors prefer native integrations
 - Regulatory requirements for change management
 
 ### Use GitHub Actions (Default) When:
 
-✅ **Flexibility is important**
+ **Flexibility is important**
 - Need custom validation steps
 - Want to run tests before Terraform
 - Need to integrate with other tools
 - Require complex approval workflows
 
-✅ **Multi-cloud or hybrid environments**
+ **Multi-cloud or hybrid environments**
 - Managing multiple providers beyond Terraform Cloud
 - Using multiple automation tools
 - Need different workflows per environment
 
-✅ **Development speed matters**
+ **Development speed matters**
 - Faster iteration cycles
 - More control over when runs happen
 - Easier debugging of CI/CD pipeline
 
 ## Prerequisites
 
-1. ✅ Terraform Cloud organization
-2. ✅ GitHub repository (or GitLab, Bitbucket, Azure DevOps)
-3. ✅ Admin access to both
-4. ✅ This template already set up
+1.  Terraform Cloud organization
+2.  GitHub repository (or GitLab, Bitbucket, Azure DevOps)
+3.  Admin access to both
+4.  This template already set up
 
 ## Setup VCS Connection
 
@@ -144,8 +144,8 @@ If you've already created workspaces, update them:
    ```
    VCS Branch: main
    Working Directory: environments/dev  (or staging, prod)
-   Automatic Run Triggering: ✅ Enabled
-   Automatic speculative plans: ✅ Enabled (for PRs)
+   Automatic Run Triggering:  Enabled
+   Automatic speculative plans:  Enabled (for PRs)
    ```
 
 4. **Trigger Patterns** (Advanced):
@@ -241,12 +241,12 @@ Configure in GitHub repository settings:
 ```yaml
 Branch: main
 Rules:
-  ✅ Require pull request reviews (minimum 2)
-  ✅ Require status checks to pass
+   Require pull request reviews (minimum 2)
+   Require status checks to pass
      - Terraform Cloud - infrastructure-dev
-  ✅ Require branches to be up to date
-  ✅ Require linear history
-  ✅ Include administrators
+   Require branches to be up to date
+   Require linear history
+   Include administrators
 ```
 
 ### 2. Workspace Strategy
@@ -255,17 +255,17 @@ Rules:
 Repository: terraform-cloud-template
 ├── Workspace: infrastructure-dev
 │   Working Directory: environments/dev
-│   Auto-apply: ✅ Yes
+│   Auto-apply:  Yes
 │   Branch: main
 │
 ├── Workspace: infrastructure-staging  
 │   Working Directory: environments/staging
-│   Auto-apply: ❌ No (manual approval)
+│   Auto-apply:  No (manual approval)
 │   Branch: main
 │
 └── Workspace: infrastructure-prod
     Working Directory: environments/prod
-    Auto-apply: ❌ No (manual approval)
+    Auto-apply:  No (manual approval)
     Branch: main
     Requires: 2 approvers in Terraform Cloud
 ```
@@ -323,15 +323,15 @@ main = rule {
 ### 6. Working Directory Best Practices
 
 ```
-✅ Good: Separate working directories per environment
+ Good: Separate working directories per environment
 Workspace: infrastructure-dev
 Working Dir: environments/dev
 
-✅ Good: Module-specific workspaces
+ Good: Module-specific workspaces
 Workspace: shared-vpc
 Working Dir: modules/vpc
 
-❌ Bad: Multiple workspaces in same directory
+ Bad: Multiple workspaces in same directory
 Causes conflicts and confusion
 ```
 
@@ -340,17 +340,17 @@ Causes conflicts and confusion
 | Feature | VCS-Driven | GitHub Actions |
 |---------|------------|----------------|
 | **Setup Complexity** | Medium (OAuth) | Low (just token) |
-| **Native Integration** | ✅ Yes | Via API |
-| **Custom Validation** | ❌ Limited | ✅ Unlimited |
-| **Multi-provider** | Terraform only | ✅ Any tool |
-| **Speculative Plans** | ✅ Automatic | ✅ Via workflow |
+| **Native Integration** |  Yes | Via API |
+| **Custom Validation** |  Limited |  Unlimited |
+| **Multi-provider** | Terraform only |  Any tool |
+| **Speculative Plans** |  Automatic |  Via workflow |
 | **Run Management** | TFC UI | GitHub UI |
-| **Queue Management** | ✅ Built-in | Manual |
+| **Queue Management** |  Built-in | Manual |
 | **Cost** | Free (TFC tier) | Free (GitHub tier) |
 | **Learning Curve** | Low | Medium |
-| **Enterprise Features** | ✅ Full access | Via API |
+| **Enterprise Features** |  Full access | Via API |
 | **Debugging** | TFC logs | GitHub logs |
-| **Flexibility** | Low | ✅ High |
+| **Flexibility** | Low |  High |
 
 ## Migration Path
 
@@ -422,11 +422,11 @@ Push changes and verify GitHub Actions trigger runs.
 ### VCS Not Triggering Runs
 
 **Check**:
-1. ✅ Workspace connected to correct repository
-2. ✅ Working directory matches pushed files
-3. ✅ Branch matches (usually `main`)
-4. ✅ OAuth token has repository access
-5. ✅ File paths trigger the workspace
+1.  Workspace connected to correct repository
+2.  Working directory matches pushed files
+3.  Branch matches (usually `main`)
+4.  OAuth token has repository access
+5.  File paths trigger the workspace
 
 **Solution**:
 ```bash
@@ -441,9 +441,9 @@ Push changes and verify GitHub Actions trigger runs.
 ### Speculative Plans Not Showing in PRs
 
 **Check**:
-1. ✅ "Automatic speculative plans" enabled in workspace
-2. ✅ GitHub PR from same repository (not fork)
-3. ✅ Terraform Cloud has PR comment permissions
+1.  "Automatic speculative plans" enabled in workspace
+2.  GitHub PR from same repository (not fork)
+3.  Terraform Cloud has PR comment permissions
 
 **Solution**:
 - Workspace Settings → VCS
@@ -482,30 +482,30 @@ Add:
 ### 1. Repository Access
 
 ```
-✅ Good: Grant Terraform Cloud access to specific repositories only
-❌ Bad: Grant access to all repositories
+ Good: Grant Terraform Cloud access to specific repositories only
+ Bad: Grant access to all repositories
 ```
 
 ### 2. Branch Protection
 
 ```
-✅ Good: Protect main branch, require reviews
-❌ Bad: Allow direct pushes to main
+ Good: Protect main branch, require reviews
+ Bad: Allow direct pushes to main
 ```
 
 ### 3. Secret Management
 
 ```
-✅ Good: Secrets in Terraform Cloud workspace variables
-❌ Bad: Secrets in Git repository (even encrypted)
+ Good: Secrets in Terraform Cloud workspace variables
+ Bad: Secrets in Git repository (even encrypted)
 ```
 
 ### 4. Approval Requirements
 
 ```
-✅ Production: Require manual approval + 2 reviewers
-✅ Staging: Require manual approval + 1 reviewer  
-⚠️ Dev: Auto-apply acceptable for development
+ Production: Require manual approval + 2 reviewers
+ Staging: Require manual approval + 1 reviewer  
+ Dev: Auto-apply acceptable for development
 ```
 
 ## Advanced Patterns

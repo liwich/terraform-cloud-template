@@ -20,10 +20,10 @@ This example shows the pattern for deploying application-specific infrastructure
 
 ## Prerequisites
 
-1. ✅ Shared infrastructure deployed (from terraform-cloud-template)
-2. ✅ Terraform Cloud account
-3. ✅ AWS credentials configured
-4. ✅ Remote state sharing enabled on shared infrastructure workspace
+1.  Shared infrastructure deployed (from terraform-cloud-template)
+2.  Terraform Cloud account
+3.  AWS credentials configured
+4.  Remote state sharing enabled on shared infrastructure workspace
 
 ## Quick Start
 
@@ -277,9 +277,9 @@ resource "aws_ecs_service" "app" {
 
 ### 1. Version Control
 
-- ✅ Commit all `.tf` files
-- ❌ Never commit `terraform.tfvars` (has secrets)
-- ✅ Commit `terraform.tfvars.example`
+-  Commit all `.tf` files
+-  Never commit `terraform.tfvars` (has secrets)
+-  Commit `terraform.tfvars.example`
 
 ### 2. State Isolation
 

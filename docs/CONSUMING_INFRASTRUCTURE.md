@@ -442,7 +442,7 @@ team-a workspace  team-b workspace
 ### Workspace Name Mismatch
 
 ```hcl
-# ❌ Wrong: Hardcoded workspace name
+#  Wrong: Hardcoded workspace name
 data "terraform_remote_state" "shared_infra" {
   config = {
     workspaces = {
@@ -451,7 +451,7 @@ data "terraform_remote_state" "shared_infra" {
   }
 }
 
-# ✅ Correct: Dynamic workspace selection
+#  Correct: Dynamic workspace selection
 data "terraform_remote_state" "shared_infra" {
   config = {
     workspaces = {
@@ -477,9 +477,9 @@ data "terraform_remote_state" "shared_infra" {
 Only share state with workspaces that need it:
 
 ```
-✅ Share infrastructure-dev state with app-backend-dev
-✅ Share infrastructure-prod state with app-backend-prod
-❌ Don't share prod state with dev workspaces
+ Share infrastructure-dev state with app-backend-dev
+ Share infrastructure-prod state with app-backend-prod
+ Don't share prod state with dev workspaces
 ```
 
 ### 2. Sensitive Outputs
@@ -487,17 +487,17 @@ Only share state with workspaces that need it:
 Be careful with sensitive data in outputs:
 
 ```hcl
-# ❌ Bad: Exposing secrets
+#  Bad: Exposing secrets
 output "database_password" {
   value = aws_db_instance.main.password
 }
 
-# ✅ Good: Only expose references
+#  Good: Only expose references
 output "database_endpoint" {
   value = aws_db_instance.main.endpoint
 }
 
-# ✅ Better: Use secrets manager
+#  Better: Use secrets manager
 output "database_secret_arn" {
   value = aws_secretsmanager_secret.db_password.arn
 }

@@ -34,14 +34,14 @@ terraform plan
 
 ## Important Notes
 
-### ⚠️ Never Commit Local State
+###  Never Commit Local State
 
 The `.gitignore` already prevents this, but ensure you don't commit:
 - `terraform.tfstate`
 - `terraform.tfstate.backup`
 - Local `backend.tf` files
 
-### 🔄 Switching to Terraform Cloud Later
+###  Switching to Terraform Cloud Later
 
 When ready to use Terraform Cloud:
 
@@ -224,14 +224,14 @@ Error: Backend initialization required
 
 ## Best Practices
 
-### ✅ Do
+###  Do
 
 - Test locally with `local` backend first
 - Use `.gitignore` to prevent committing state
 - Run `terraform plan` before `apply`
 - Clean up test resources with `terraform destroy`
 
-### ❌ Don't
+###  Don't
 
 - Commit `terraform.tfstate` files
 - Use local state for production

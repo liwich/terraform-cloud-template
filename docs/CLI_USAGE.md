@@ -301,7 +301,7 @@ terraform login
 
 ## Best Practices
 
-### ✅ Do
+###  Do
 
 **Development**:
 - Use local execution mode
@@ -320,7 +320,7 @@ terraform login
 - Use `-target` for surgical changes
 - Keep state in Terraform Cloud
 
-### ❌ Don't
+###  Don't
 
 - Don't commit local state files
 - Don't run production changes from your laptop
@@ -367,8 +367,8 @@ Best of both worlds!
 | **Output** | `terraform -chdir=environments/dev output` | `terraform output` |
 | **Execution** | Terraform Cloud | Your machine |
 | **Speed** | Slower (network) | Faster (local) |
-| **Team visibility** | ✅ Yes | ❌ No |
-| **Audit logs** | ✅ Yes | ⚠️ Limited |
+| **Team visibility** |  Yes |  No |
+| **Audit logs** |  Yes |  Limited |
 
 ## Summary
 

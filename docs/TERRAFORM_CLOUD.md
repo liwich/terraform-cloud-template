@@ -297,64 +297,64 @@ main = rule {
 
 ### 1. Workspace Organization
 
-✅ **Do**:
+ **Do**:
 - One workspace per environment
 - Consistent naming convention
 - Group related workspaces in projects
 - Use descriptive names
 
-❌ **Don't**:
+ **Don't**:
 - Mix environments in one workspace
 - Use generic names like "workspace-1"
 
 ### 2. Variable Management
 
-✅ **Do**:
+ **Do**:
 - Mark secrets as sensitive
 - Use environment variables for credentials
 - Document variable purposes
 - Set appropriate defaults
 
-❌ **Don't**:
+ **Don't**:
 - Commit secrets to version control
 - Hard-code credentials
 - Use same variables across all environments
 
 ### 3. State Management
 
-✅ **Do**:
+ **Do**:
 - Enable remote state sharing selectively
 - Use outputs for cross-workspace references
 - Version control your configurations
 - Regular state backups (export)
 
-❌ **Don't**:
+ **Don't**:
 - Share state globally
 - Manually edit state files
 - Delete workspaces without backup
 
 ### 4. Team Collaboration
 
-✅ **Do**:
+ **Do**:
 - Use least-privilege access
 - Require approvals for production
 - Document changes in commits
 - Use pull requests for reviews
 
-❌ **Don't**:
+ **Don't**:
 - Give everyone admin access
 - Skip peer reviews
 - Apply directly to production
 
 ### 5. CI/CD Integration
 
-✅ **Do**:
+ **Do**:
 - Use API-driven workflows
 - Automate testing and validation
 - Plan on every PR
 - Require successful plan before merge
 
-❌ **Don't**:
+ **Don't**:
 - Auto-apply to production without review
 - Skip validation steps
 - Ignore failed plans

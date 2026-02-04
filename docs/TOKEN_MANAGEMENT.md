@@ -88,23 +88,23 @@ git push origin main
 
 **Option 1: Never Expire** (Simplest)
 ```
-✅ Pros: No maintenance required
-⚠️ Cons: Security risk if token leaked
-🔒 Mitigation: Store in GitHub Secrets, rotate every 90 days
+ Pros: No maintenance required
+ Cons: Security risk if token leaked
+ Mitigation: Store in GitHub Secrets, rotate every 90 days
 ```
 
 **Option 2: 1 Year Expiration** (Balanced)
 ```
-✅ Pros: Good security/convenience balance
-⚠️ Cons: Must remember to rotate
-📅 Reminder: Set calendar reminder 2 weeks before expiration
+ Pros: Good security/convenience balance
+ Cons: Must remember to rotate
+ Reminder: Set calendar reminder 2 weeks before expiration
 ```
 
 **Option 3: 90 Days** (Most Secure)
 ```
-✅ Pros: Best security practice
-⚠️ Cons: More frequent rotation needed
-📅 Reminder: Quarterly token rotation
+ Pros: Best security practice
+ Cons: More frequent rotation needed
+ Reminder: Quarterly token rotation
 ```
 
 ### For User Tokens (Local Development)
@@ -201,12 +201,12 @@ Settings → Teams → Review all members
 ### Prevention
 
 ```
-✅ Store tokens in GitHub Secrets only
-✅ Never commit tokens to Git
-✅ Use .gitignore for local credentials
-✅ Enable GitHub Secret scanning
-✅ Use team tokens (not user tokens) for automation
-✅ Set appropriate workspace permissions
+ Store tokens in GitHub Secrets only
+ Never commit tokens to Git
+ Use .gitignore for local credentials
+ Enable GitHub Secret scanning
+ Use team tokens (not user tokens) for automation
+ Set appropriate workspace permissions
 ```
 
 ## Alternative: VCS-Driven Workflow (No Token Needed!)
@@ -214,10 +214,10 @@ Settings → Teams → Review all members
 For GitHub-based workflows, consider VCS integration:
 
 **Advantages**:
-- ✅ No API tokens to manage
-- ✅ OAuth-based authentication
-- ✅ Automatic token rotation by GitHub/Terraform Cloud
-- ✅ Simpler for teams
+-  No API tokens to manage
+-  OAuth-based authentication
+-  Automatic token rotation by GitHub/Terraform Cloud
+-  Simpler for teams
 
 **Setup**: See [VCS Integration Guide](VCS_INTEGRATION.md)
 
@@ -248,11 +248,11 @@ Format:
 
 ### Never Store In
 ```
-❌ Git repository (even in .env files)
-❌ Public documentation
-❌ Slack/chat messages
-❌ Email
-❌ Plain text files in shared locations
+ Git repository (even in .env files)
+ Public documentation
+ Slack/chat messages
+ Email
+ Plain text files in shared locations
 ```
 
 ## Best Practices Summary

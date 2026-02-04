@@ -65,4 +65,4 @@ But the **actual deployment** is filtered by `ENABLED_ENVIRONMENTS`.
 2. **Week 2**: Add staging → Set `ENABLED_ENVIRONMENTS=dev staging`
 3. **Production ready**: Enable prod → Set `ENABLED_ENVIRONMENTS=dev staging prod`
 
-This approach lets you gradually roll out environments without modifying workflows or code! 🚀
+This approach lets you gradually roll out environments without modifying workflows or code! 

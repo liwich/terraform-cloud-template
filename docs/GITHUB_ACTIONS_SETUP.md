@@ -2,7 +2,7 @@
 
 Quick reference for setting up CI/CD after running the setup script.
 
-## ✅ Prerequisites
+##  Prerequisites
 
 You should have already run:
 ```bash
@@ -13,7 +13,7 @@ This created your Terraform Cloud workspaces. Now let's connect GitHub Actions!
 
 ---
 
-## 🚀 5-Minute Setup
+##  5-Minute Setup
 
 ### Step 1: Create Team Token in Terraform Cloud
 
@@ -33,7 +33,7 @@ This created your Terraform Cloud workspaces. Now let's connect GitHub Actions!
    - Description: `GitHub Actions CI/CD`
    - **Expiration: Never** (recommended) or set to 1 year
    - Click **"Create team token"**
-   - **⚠️ COPY THE TOKEN NOW** - you won't see it again!
+   - ** COPY THE TOKEN NOW** - you won't see it again!
 
 ### Step 2: Grant Team Access to Workspaces
 
@@ -50,7 +50,7 @@ Give the team access to all three workspaces:
 - `infrastructure-staging`
 - `infrastructure-prod`
 
-💡 **Tip**: You can use different permissions per environment:
+ **Tip**: You can use different permissions per environment:
 - Dev: `Write` (auto-deploy)
 - Staging: `Write` (auto-deploy)
 - Prod: `Plan` (manual approval required)
@@ -78,7 +78,7 @@ git commit -m "Initial Terraform Cloud infrastructure"
 git push origin main
 ```
 
-### Step 5: Watch It Deploy! 🎉
+### Step 5: Watch It Deploy! 
 
 1. Go to your GitHub repository
 2. Click **"Actions"** tab
@@ -87,37 +87,37 @@ git push origin main
 
 ---
 
-## 🎯 What Happens Next?
+##  What Happens Next?
 
 ### On Every Pull Request
 
 GitHub Actions will:
-- ✅ Check Terraform formatting
-- ✅ Validate configuration
-- ✅ Run `terraform plan`
-- ✅ Post plan output as PR comment
+-  Check Terraform formatting
+-  Validate configuration
+-  Run `terraform plan`
+-  Post plan output as PR comment
 
 ### On Every Push to Main
 
 GitHub Actions will:
-- ✅ Detect which environments changed
-- ✅ Run `terraform plan`
-- ✅ Run `terraform apply` automatically
-- ✅ Show deployment summary
+-  Detect which environments changed
+-  Run `terraform plan`
+-  Run `terraform apply` automatically
+-  Show deployment summary
 
 ---
 
-## 🔒 Security Best Practices
+##  Security Best Practices
 
 ### Token Management
 
-✅ **Do**:
+ **Do**:
 - Use team tokens (not user tokens) for CI/CD
 - Set expiration or rotate every 90 days
 - Store only in GitHub Secrets
 - Grant minimum required permissions
 
-❌ **Don't**:
+ **Don't**:
 - Commit tokens to Git
 - Share tokens in chat/email
 - Use same token for multiple purposes
@@ -128,10 +128,10 @@ Protect your `main` branch:
 
 1. **GitHub repo → Settings → Branches**
 2. **Add rule** for `main`:
-   - ✅ Require pull request reviews before merging (at least 1)
-   - ✅ Require status checks to pass before merging
+   -  Require pull request reviews before merging (at least 1)
+   -  Require status checks to pass before merging
      - Select: `Terraform Plan - dev`
-   - ✅ Require branches to be up to date before merging
+   -  Require branches to be up to date before merging
 3. **Create**
 
 Now all changes require:
@@ -183,7 +183,7 @@ git push origin main
 
 ---
 
-## 🔧 Troubleshooting
+##  Troubleshooting
 
 ### "Error: 401 Unauthorized"
 
@@ -249,7 +249,7 @@ ls -la .github/workflows/
 
 ---
 
-## 📊 Workflow Files
+##  Workflow Files
 
 ### Included Workflows
 
@@ -289,7 +289,7 @@ Then create environment in GitHub with approval:
 
 ---
 
-## 🎓 Next Steps
+##  Next Steps
 
 ### Learn More
 
@@ -317,7 +317,7 @@ Then create environment in GitHub with approval:
 
 ---
 
-## ✅ Checklist
+##  Checklist
 
 Use this to verify your setup:
 
@@ -332,17 +332,17 @@ Use this to verify your setup:
 
 ---
 
-## 🎉 Success!
+##  Success!
 
 Once you see this in GitHub Actions:
 
 ```
-✅ Terraform Plan - dev
-✅ Terraform Apply - dev
+ Terraform Plan - dev
+ Terraform Apply - dev
 Apply complete! Resources: X added, 0 changed, 0 destroyed.
 ```
 
-**Your CI/CD pipeline is working!** 🚀
+**Your CI/CD pipeline is working!** 
 
 Every future change will be:
 - Reviewed in pull requests
@@ -350,4 +350,4 @@ Every future change will be:
 - Deployed on merge
 - Tracked in Terraform Cloud
 
-Welcome to automated infrastructure management! 🎊
+Welcome to automated infrastructure management! 

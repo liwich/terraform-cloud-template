@@ -36,11 +36,11 @@ chmod +x scripts/setup.sh
 ```
 
 **What the script does:**
-- ✓ Validates prerequisites
-- ✓ Creates Terraform Cloud project
-- ✓ Creates workspaces (dev, staging, prod)
-- ✓ Configures backend files
-- ✓ Sets AWS credentials (optional)
+-  Validates prerequisites
+-  Creates Terraform Cloud project
+-  Creates workspaces (dev, staging, prod)
+-  Configures backend files
+-  Sets AWS credentials (optional)
 
 ### 4. Authenticate Terraform CLI
 
@@ -58,7 +58,7 @@ terraform login
 # 5. Press Enter
 ```
 
-**✅ You're now authenticated!**
+** You're now authenticated!**
 
 ### 5. Customize Configuration
 
@@ -96,7 +96,7 @@ terraform apply
 
 Requires setting workspace to "Local" execution mode in Terraform Cloud UI.
 
-**⏱️ Deployment time:** ~5-10 minutes
+**⏱ Deployment time:** ~5-10 minutes
 
 ### 7. Verify Deployment
 
@@ -115,14 +115,14 @@ terraform output
 
 ### Default Resources (Dev Environment)
 
-- ✅ VPC with CIDR 10.0.0.0/16
-- ✅ 3 Public subnets (multi-AZ)
-- ✅ 3 Private subnets (multi-AZ)
-- ✅ Internet Gateway
-- ✅ 1 NAT Gateway (cost optimized for dev)
-- ✅ Route tables and associations
+-  VPC with CIDR 10.0.0.0/16
+-  3 Public subnets (multi-AZ)
+-  3 Private subnets (multi-AZ)
+-  Internet Gateway
+-  1 NAT Gateway (cost optimized for dev)
+-  Route tables and associations
 
-**💰 Estimated cost:** ~$35-40/month for dev environment
+** Estimated cost:** ~$35-40/month for dev environment
 
 ## Next Steps
 
@@ -175,11 +175,11 @@ Follow the setup script output or these steps:
    ```
 
 **Result:**
-- ✅ Dev deploys automatically
-- ⏸️ Staging waits for approval
-- ⏸️ Prod requires 2 approvals + 10-min wait
+-  Dev deploys automatically
+- ⏸ Staging waits for approval
+- ⏸ Prod requires 2 approvals + 10-min wait
 
-📖 **[Detailed Guide: GitHub Environments](docs/GITHUB_ENVIRONMENTS.md)**
+ **[Detailed Guide: GitHub Environments](docs/GITHUB_ENVIRONMENTS.md)**
 
 **Option 2: VCS-Driven Workflow (Enterprise Alternative)**
 
@@ -306,7 +306,7 @@ Each workspace manages:
 
 ```
 terraform-cloud-template/
-├── scripts/setup.sh           # 🚀 Start here!
+├── scripts/setup.sh           #  Start here!
 ├── environments/
 │   ├── dev/                   # Development environment
 │   ├── staging/               # Staging environment
@@ -392,6 +392,6 @@ instance_type = "t3.medium" # Appropriate sizing
 
 ---
 
-**🎉 Congratulations!** You now have production-ready infrastructure-as-code with Terraform Cloud!
+** Congratulations!** You now have production-ready infrastructure-as-code with Terraform Cloud!
 
 For detailed information, see the [main README](README.md) and [documentation](docs/).
