@@ -107,7 +107,7 @@ class TerraformCloudAPI:
                     "name": workspace_name,
                     "terraform-version": terraform_version,
                     "auto-apply": auto_apply,
-                    "execution-mode": "remote",
+                    "execution-mode": "local",  # Local execution for CI/CD compatibility with modules
                     "file-triggers-enabled": True,
                     "queue-all-runs": False,
                     "speculative-enabled": True
@@ -217,13 +217,10 @@ def main():
     tfc_org = os.environ.get("TFC_ORGANIZATION") or input("Enter Terraform Cloud Organization: ").strip()
     project_name = os.environ.get("TFC_PROJECT") or input("Enter Project Name [infrastructure]: ").strip() or "infrastructure"
     
-    # Optional AWS credentials
-    print("\n" + "=" * 60)
-    print("AWS Credentials (optional - can be set later in TFC UI)")
-    print("=" * 60)
-    aws_access_key = os.environ.get("AWS_ACCESS_KEY_ID") or input("AWS Access Key ID (press Enter to skip): ").strip() or None
-    aws_secret_key = os.environ.get("AWS_SECRET_ACCESS_KEY") or input("AWS Secret Access Key (press Enter to skip): ").strip() or None
-    aws_region = os.environ.get("AWS_REGION") or input("AWS Region [us-east-1]: ").strip() or "us-east-1"
+    # Skip AWS credentials - using OIDC instead
+    aws_access_key = None
+    aws_secret_key = None
+    aws_region = "us-west-2"
     
     # Initialize API client
     print("\n" + "=" * 60)
@@ -260,16 +257,6 @@ def main():
         
         if workspace:
             workspaces[env] = workspace
-            
-            # Set AWS credentials if provided
-            if aws_access_key and aws_secret_key:
-                print(f"  Setting AWS credentials for {workspace_name}...")
-                api.set_workspace_variables(
-                    workspace["id"],
-                    aws_access_key,
-                    aws_secret_key,
-                    aws_region
-                )
     
     # Summary
     print("\n" + "=" * 60)

@@ -2,11 +2,11 @@ name: Terraform Apply
 
 on:
   push:
-    branches:
-      - main
-    paths:
-      - 'environments/**'
-      - 'modules/**'
+      branches:
+        - main
+      paths:
+        - 'environments/**'
+        - 'modules/**'
 
 env:
   TF_VERSION: '1.6.0'
@@ -26,28 +26,33 @@ jobs:
       - name: Detect changed environments
         id: set-matrix
         run: |
-          # Check if this is the first commit (no HEAD~1)
-          if ! git rev-parse HEAD~1 >/dev/null 2>&1; then
-            echo "First commit detected - deploying only dev environment"
-            environments='["dev"]'
-          else
-            # Get changed files in last commit
-            changed_files=$(git diff --name-only HEAD~1 HEAD)
+          # Get enabled environments from variable (default: dev only)
+          enabled_envs="${{ vars.ENABLED_ENVIRONMENTS || 'dev' }}"
+          echo "Enabled environments: $enabled_envs"
+          
+          # Get changed files in last commit
+          changed_files=$(git diff --name-only HEAD~1 HEAD 2>/dev/null || echo "")
+          
+          # Initialize environments array
+          environments="[]"
+          
+          # Check each environment
+          for env in dev staging prod; do
+            # Skip if environment is not enabled
+            if ! echo "$enabled_envs" | grep -qw "$env"; then
+              echo "Skipping $env (not enabled)"
+              continue
+            fi
             
-            # Initialize environments array
-            environments="[]"
-            
-            # Check each environment
-            for env in dev staging prod; do
-              if echo "$changed_files" | grep -q "^environments/$env/\|^modules/"; then
-                if [ "$environments" = "[]" ]; then
-                  environments="[\"$env\"]"
-                else
-                  environments=$(echo "$environments" | sed "s/]/, \"$env\"]/")
-                fi
+            # Check if this environment has changes
+            if echo "$changed_files" | grep -q "^environments/$env/\|^modules/"; then
+              if [ "$environments" = "[]" ]; then
+                environments="[\"$env\"]"
+              else
+                environments=$(echo "$environments" | sed "s/]/, \"$env\"]/")
               fi
-            done
-          fi
+            fi
+          done
           
           echo "environments=$environments" >> $GITHUB_OUTPUT
           echo "Changed environments: $environments"
@@ -57,6 +62,12 @@ jobs:
     needs: detect-changes
     if: needs.detect-changes.outputs.environments != '[]'
     runs-on: ubuntu-latest
+    
+    # Required for OIDC authentication
+    permissions:
+      id-token: write
+      contents: read
+    
     strategy:
       matrix:
         environment: ${{ fromJson(needs.detect-changes.outputs.environments) }}
@@ -70,6 +81,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION || 'us-west-2' }}
+          role-session-name: GitHubActions-${{ github.run_id }}-${{ matrix.environment }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3

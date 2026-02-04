@@ -1,0 +1,13 @@
+# AWS Configuration
+aws_region = "us-west-2"
+
+# IAM Role Configuration
+role_name = "GitHubActionsTerraformRole"
+
+# GitHub Repository Configuration
+github_org  = "liwich"  # Your GitHub username or organization
+github_repo = "terraform-cloud-template"  # Your repository name
+
+# Optional: Environment Restrictions
+enable_environment_restrictions = false
+allowed_regions = ["us-east-1", "us-west-2"]

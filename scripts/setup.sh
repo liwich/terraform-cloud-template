@@ -30,6 +30,16 @@ if ! command -v python3 &> /dev/null; then
 fi
 echo -e "${GREEN}✓ Python 3 installed:${NC} $(python3 --version)"
 
+# Check AWS CLI
+if ! command -v aws &> /dev/null; then
+    echo -e "${YELLOW}! AWS CLI is not installed${NC}"
+    echo -e "${YELLOW}  OIDC setup will be skipped. Install AWS CLI to enable OIDC authentication.${NC}"
+    SKIP_OIDC=true
+else
+    echo -e "${GREEN}✓ AWS CLI installed:${NC} $(aws --version | head -n 1)"
+    SKIP_OIDC=false
+fi
+
 # Check jq (optional but recommended)
 if ! command -v jq &> /dev/null; then
     echo -e "${YELLOW}! jq is not installed (optional, but recommended)${NC}"
@@ -140,6 +150,79 @@ if [ ! -f "terraform.tfvars" ] && [ -f "terraform.tfvars.example" ]; then
     echo -e "${YELLOW}! Please review and update terraform.tfvars with your specific values${NC}"
 fi
 
+# Setup AWS OIDC (optional but recommended)
+if [ "$SKIP_OIDC" = false ]; then
+    echo -e "\n${YELLOW}Setting up AWS OIDC for GitHub Actions...${NC}"
+    echo -e "${YELLOW}This will create an IAM role for secure authentication (no long-lived credentials)${NC}"
+    
+    read -p "Setup AWS OIDC? (Y/n): " SETUP_OIDC
+    SETUP_OIDC=${SETUP_OIDC:-Y}
+    
+    if [[ "$SETUP_OIDC" =~ ^[Yy]$ ]]; then
+        # Check AWS credentials
+        if ! aws sts get-caller-identity &> /dev/null; then
+            echo -e "${RED}✗ AWS credentials not configured${NC}"
+            echo -e "${YELLOW}  Run 'aws configure' first${NC}"
+        else
+            AWS_ACCOUNT=$(aws sts get-caller-identity --query Account --output text)
+            echo -e "${GREEN}✓ AWS credentials valid (Account: ${AWS_ACCOUNT})${NC}"
+            
+            # Get GitHub info
+            read -p "Enter GitHub username/organization: " GITHUB_ORG
+            read -p "Enter GitHub repository name [terraform-cloud-template]: " GITHUB_REPO
+            GITHUB_REPO=${GITHUB_REPO:-terraform-cloud-template}
+            read -p "Enter AWS region [us-west-2]: " AWS_REGION_OIDC
+            AWS_REGION_OIDC=${AWS_REGION_OIDC:-us-west-2}
+            
+            # Create OIDC setup
+            cd terraform-aws-oidc
+            
+            # Create terraform.tfvars
+            cat > terraform.tfvars <<EOF
+aws_region  = "${AWS_REGION_OIDC}"
+role_name   = "GitHubActionsTerraformRole"
+github_org  = "${GITHUB_ORG}"
+github_repo = "${GITHUB_REPO}"
+EOF
+            
+            # Initialize and apply
+            echo -e "\n${YELLOW}Deploying OIDC infrastructure to AWS...${NC}"
+            terraform init -upgrade > /dev/null 2>&1
+            
+            # Check if OIDC provider already exists and import it
+            OIDC_ARN=$(aws iam list-open-id-connect-providers --query "OpenIDConnectProviderList[?ends_with(Arn, 'token.actions.githubusercontent.com')].Arn" --output text 2>/dev/null)
+            if [ ! -z "$OIDC_ARN" ]; then
+                echo -e "${YELLOW}OIDC provider already exists, importing...${NC}"
+                terraform import aws_iam_openid_connect_provider.github_actions "$OIDC_ARN" > /dev/null 2>&1 || true
+            fi
+            
+            echo -e "${YELLOW}Running terraform apply...${NC}"
+            if terraform apply -auto-approve 2>&1 | tee /tmp/terraform-oidc.log; then
+                ROLE_ARN=$(terraform output -raw github_actions_role_arn)
+                echo -e "\n${GREEN}✓ OIDC setup complete!${NC}"
+                echo -e "\n${GREEN}============================================================"
+                echo "AWS Role ARN: ${ROLE_ARN}"
+                echo "============================================================${NC}"
+                echo -e "\n${YELLOW}📋 Add this to GitHub Secrets:${NC}"
+                echo "   1. Go to: https://github.com/${GITHUB_ORG}/${GITHUB_REPO}/settings/secrets/actions"
+                echo "   2. Click 'New repository secret'"
+                echo "   3. Name: AWS_ROLE_ARN"
+                echo "   4. Value: ${ROLE_ARN}"
+                echo ""
+            else
+                echo -e "${RED}✗ OIDC setup failed${NC}"
+                echo -e "\n${YELLOW}Error details:${NC}"
+                tail -20 /tmp/terraform-oidc.log
+                echo -e "\n${YELLOW}To fix manually:${NC}"
+                echo "  cd terraform-aws-oidc"
+                echo "  terraform apply"
+            fi
+            
+            cd ..
+        fi
+    fi
+fi
+
 # Summary
 echo -e "\n============================================================"
 echo -e "${GREEN}Setup Complete!${NC}"
@@ -152,12 +235,28 @@ echo -e "${GREEN}============================================================"
 echo "🎉 Terraform Cloud Setup Complete!"
 echo "============================================================${NC}"
 echo ""
-echo -e "${YELLOW}📋 Next Steps for GitHub Actions CI/CD:${NC}"
+echo -e "${YELLOW}📋 Next Steps:${NC}"
 echo ""
-echo -e "${RED}⚠️  IMPORTANT: Set up GitHub Environments first!${NC}"
-echo "   This enables deployment approvals for staging/prod"
-echo ""
-echo "1️⃣  CREATE GITHUB ENVIRONMENTS:"
+
+if [ ! -z "$ROLE_ARN" ]; then
+    echo -e "${GREEN}✅ AWS OIDC is configured!${NC}"
+    echo ""
+    echo -e "${YELLOW}1️⃣  ADD ROLE ARN TO GITHUB SECRETS:${NC}"
+    echo "   • Go to: https://github.com/${GITHUB_ORG}/${GITHUB_REPO}/settings/secrets/actions"
+    echo "   • Name: AWS_ROLE_ARN"
+    echo "   • Value: ${ROLE_ARN}"
+    echo ""
+    echo -e "${YELLOW}2️⃣  CREATE GITHUB ENVIRONMENTS (OPTIONAL):${NC}"
+else
+    echo -e "${RED}⚠️  AWS authentication not configured${NC}"
+    echo ""
+    echo -e "${YELLOW}Option A: Use OIDC (Recommended):${NC}"
+    echo "   cd terraform-aws-oidc"
+    echo "   terraform apply"
+    echo "   # Then add AWS_ROLE_ARN to GitHub Secrets"
+    echo ""
+    echo -e "${YELLOW}1️⃣  CREATE GITHUB ENVIRONMENTS (OPTIONAL):${NC}"
+fi
 echo "   • Go to: https://github.com/[YOUR-ORG]/[YOUR-REPO]/settings/environments"
 echo "   • Click 'New environment' → Name: 'dev' → Configure"
 echo "     └─ Leave all protection rules unchecked (auto-deploy)"
@@ -176,7 +275,7 @@ echo "   • Click 'Create a team token'"
 echo "   • Expiration: Select 'Never' (or 1 year)"
 echo "   • Copy the token (you won't see it again!)"
 echo ""
-echo "3️⃣ ADD TOKEN TO GITHUB SECRETS:"
+echo "3️⃣  ADD TOKEN TO GITHUB SECRETS:"
 echo "   • Go to your GitHub repo → Settings → Secrets and variables → Actions"
 echo "   • Click 'New repository secret'"
 echo "   • Name: TF_API_TOKEN"
@@ -199,8 +298,7 @@ echo "   terraform -chdir=environments/dev plan"
 echo ""
 echo -e "${GREEN}============================================================"
 echo "📚 Documentation:"
-echo "   • GitHub Environments: docs/GITHUB_ENVIRONMENTS.md ⭐"
-echo "   • Token Management: docs/TOKEN_MANAGEMENT.md"
+echo "   • GitHub Environments: docs/GITHUB_ENVIRONMENTS.md"
 echo "   • Troubleshooting: docs/TROUBLESHOOTING.md"
-echo "   • Quick start: QUICKSTART.md"
+echo "   • README: README.md"
 echo "============================================================${NC}"

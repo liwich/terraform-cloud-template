@@ -316,6 +316,50 @@ terraform init
 
 ## Module Errors
 
+### Error: "Unreadable module directory" (Remote Execution)
+
+**Error Message**:
+```
+Error: Unreadable module directory
+Unable to evaluate directory symlink: lstat ../../modules: no such file or directory
+The directory could not be read for module "vpc" at main.tf:24.
+```
+
+**Cause**: When using Terraform Cloud remote execution with `working-directory` set, only that specific directory is uploaded, not the parent directories containing modules.
+
+**Solution**:
+
+✅ **For GitHub Actions** (already fixed in this template):
+The workflows use `terraform -chdir=environments/dev` instead of setting `working-directory`. This ensures the entire repository is uploaded to Terraform Cloud.
+
+```yaml
+# ✅ Correct - uploads entire repo
+- run: terraform -chdir=environments/dev init
+
+# ❌ Wrong - only uploads environments/dev
+working-directory: environments/dev
+- run: terraform init
+```
+
+✅ **For Local CLI Usage**:
+Run from the project root using `-chdir`:
+```bash
+# From project root
+terraform -chdir=environments/dev init
+terraform -chdir=environments/dev plan
+terraform -chdir=environments/dev apply
+```
+
+✅ **Alternative: Use Local Execution Mode**:
+In Terraform Cloud workspace settings:
+1. Settings → General → Execution Mode
+2. Change from "Remote" to "Local"
+3. This runs Terraform on your machine, giving it access to local files
+
+**Why this happens**: Terraform Cloud's remote execution only receives files from the working directory and below. Using `-chdir` from the root ensures both `environments/` and `modules/` directories are accessible.
+
+---
+
 ### Error: "Module not found"
 
 **Cause**: Incorrect module source path.

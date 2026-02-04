@@ -34,10 +34,10 @@ cd terraform-cloud-template
 ### 2. Run Automated Setup
 
 The setup script will:
-- Validate prerequisites
+- Validate prerequisites (Terraform, Python, AWS CLI)
 - Create Terraform Cloud project and workspaces
 - Configure backend for each environment
-- Set up AWS credentials (optional)
+- **Set up AWS OIDC authentication** (recommended)
 
 ```bash
 chmod +x scripts/setup.sh
@@ -45,10 +45,10 @@ chmod +x scripts/setup.sh
 ```
 
 You'll be prompted for:
-- Terraform Cloud API token ([Get one here](https://app.terraform.io/app/settings/tokens))
-- Terraform Cloud organization name
-- Project name (default: "infrastructure")
-- AWS credentials (optional - can be set later in Terraform Cloud UI)
+- Terraform Cloud API token
+- Organization and project name
+- **AWS OIDC setup** (auto-creates IAM role)
+- GitHub repository details
 
 ### 3. Customize Configuration
 
@@ -59,25 +59,31 @@ Review and update `terraform.tfvars` with your specific settings:
 vi terraform.tfvars
 ```
 
-### 4. Set Up GitHub Actions (Recommended)
+### 4. Set Up GitHub Secrets
 
-**For CI/CD automation**, follow the detailed prompts from the setup script, or see:
-- 📖 **[GitHub Actions Setup Guide](GITHUB_ACTIONS_SETUP.md)** - Step-by-step with screenshots
+If setup script configured OIDC (recommended):
+```bash
+# Add to GitHub Secrets:
+# Settings → Secrets → Actions → New secret
+# Name: AWS_ROLE_ARN
+# Value: <from setup output>
+```
 
-**Quick summary**:
-1. Create team token in Terraform Cloud
-2. Grant team access to workspaces
-3. Add token to GitHub Secrets (`TF_API_TOKEN`)
-4. Push code → Auto-deploy! 🚀
+Also add Terraform Cloud token:
+```bash
+# Name: TF_API_TOKEN  
+# Value: <team token from Terraform Cloud>
+```
 
-**Alternative: Deploy via CLI**:
+### 5. Deploy
 
 ```bash
-# From project root
-terraform -chdir=environments/dev init
-terraform -chdir=environments/dev plan
-terraform -chdir=environments/dev apply
+git add .
+git commit -m "Initial setup"
+git push origin main
 ```
+
+GitHub Actions will automatically deploy infrastructure! 🚀
 
 ## 📁 Project Structure
 
@@ -185,11 +191,26 @@ Pre-configured workflows included:
 
 ## 🔐 Security Best Practices
 
+### AWS Authentication (OIDC)
+
+**Setup script automatically configures OIDC:**
+- ✅ No long-lived credentials
+- ✅ Automatic credential rotation  
+- ✅ Enhanced security
+- ✅ AWS best practice
+
+The `setup.sh` script will:
+1. Check for AWS CLI
+2. Create OIDC provider in AWS
+3. Create IAM role with Terraform permissions
+4. Output role ARN for GitHub Secrets
+
+**Environment Control**: By default, only `dev` is enabled. Enable `staging` and `prod` when ready - see [ENVIRONMENT_CONFIG.md](ENVIRONMENT_CONFIG.md)
+
 ### Secrets Management
 - **NEVER** commit `terraform.tfvars` or any files with credentials
-- Use Terraform Cloud environment variables for AWS credentials
 - The `.gitignore` is pre-configured to block common secret files
-- Use AWS IAM roles instead of access keys when possible
+- Use GitHub Secrets for CI/CD tokens only (not AWS credentials with OIDC)
 
 ### What's Protected
 The `.gitignore` prevents committing:
