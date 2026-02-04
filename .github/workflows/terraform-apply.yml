@@ -26,22 +26,28 @@ jobs:
       - name: Detect changed environments
         id: set-matrix
         run: |
-          # Get changed files in last commit
-          changed_files=$(git diff --name-only HEAD~1 HEAD)
-          
-          # Initialize environments array
-          environments="[]"
-          
-          # Check each environment
-          for env in dev staging prod; do
-            if echo "$changed_files" | grep -q "^environments/$env/\|^modules/"; then
-              if [ "$environments" = "[]" ]; then
-                environments="[\"$env\"]"
-              else
-                environments=$(echo "$environments" | sed "s/]/, \"$env\"]/")
+          # Check if this is the first commit (no HEAD~1)
+          if ! git rev-parse HEAD~1 >/dev/null 2>&1; then
+            echo "First commit detected - deploying only dev environment"
+            environments='["dev"]'
+          else
+            # Get changed files in last commit
+            changed_files=$(git diff --name-only HEAD~1 HEAD)
+            
+            # Initialize environments array
+            environments="[]"
+            
+            # Check each environment
+            for env in dev staging prod; do
+              if echo "$changed_files" | grep -q "^environments/$env/\|^modules/"; then
+                if [ "$environments" = "[]" ]; then
+                  environments="[\"$env\"]"
+                else
+                  environments=$(echo "$environments" | sed "s/]/, \"$env\"]/")
+                fi
               fi
-            fi
-          done
+            done
+          fi
           
           echo "environments=$environments" >> $GITHUB_OUTPUT
           echo "Changed environments: $environments"
@@ -55,13 +61,11 @@ jobs:
       matrix:
         environment: ${{ fromJson(needs.detect-changes.outputs.environments) }}
       max-parallel: 1  # Apply environments sequentially
+      fail-fast: false  # Keep staging/prod deployments even if dev fails
     
     environment:
       name: ${{ matrix.environment }}
-    
-    defaults:
-      run:
-        working-directory: environments/${{ matrix.environment }}
+      url: https://app.terraform.io/app/${{ vars.TF_CLOUD_ORGANIZATION || 'YOUR-ORG' }}/workspaces/infrastructure-${{ matrix.environment }}
     
     steps:
       - name: Checkout code
@@ -75,15 +79,15 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform init
+        run: terraform -chdir=environments/${{ matrix.environment }} init
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -input=false
+        run: terraform -chdir=environments/${{ matrix.environment }} plan -input=false
 
       - name: Terraform Apply
         id: apply
-        run: terraform apply -auto-approve -input=false
+        run: terraform -chdir=environments/${{ matrix.environment }} apply -auto-approve -input=false
 
       - name: Summary
         run: |

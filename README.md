@@ -137,17 +137,30 @@ Creates a production-ready VPC with:
 
 This template provides **two automation approaches**. Choose based on your organization's needs:
 
-### Default: GitHub Actions (API-Driven)
+### Default: GitHub Actions (API-Driven) with Environment Protection
 
-**Best for**: Flexibility, custom workflows, multi-tool integration
+**Best for**: Flexibility, custom workflows, multi-tool integration, deployment approvals
 
 Pre-configured workflows included:
 - **On Pull Request** (`terraform-plan.yml`): Validates and plans changes, posts to PR
-- **On Merge** (`terraform-apply.yml`): Automatically applies approved changes
+- **On Merge** (`terraform-apply.yml`): Automatically applies with environment protection
+  - **Dev**: Auto-deploys immediately ✅
+  - **Staging**: Requires 1 approval ⏸️
+  - **Prod**: Requires 2 approvals + wait timer ⏸️
 
 **Setup**:
-1. Add `TF_API_TOKEN` to GitHub Secrets (Settings → Secrets → Actions)
-2. Push to GitHub - workflows run automatically!
+1. **Create GitHub Environments** (5 minutes)
+   ```
+   Settings → Environments → New environment
+   
+   Create: dev (no protection)
+           staging (1 reviewer required)
+           prod (2 reviewers + wait timer)
+   ```
+2. Add `TF_API_TOKEN` to GitHub Secrets (Settings → Secrets → Actions)
+3. Push to GitHub - workflows run automatically!
+
+📖 **[Full Setup Guide: GitHub Environments](docs/GITHUB_ENVIRONMENTS.md)**
 
 ### Alternative: VCS-Driven Workflow (Enterprise)
 
@@ -218,6 +231,7 @@ For detailed guidance, see [docs/CONSUMING_INFRASTRUCTURE.md](docs/CONSUMING_INF
 
 - **[Setup Guide](docs/SETUP_GUIDE.md)** - Detailed setup instructions and configuration
 - **[Token Management](docs/TOKEN_MANAGEMENT.md)** - Managing and rotating Terraform Cloud tokens
+- **[GitHub Environments](docs/GITHUB_ENVIRONMENTS.md)** - Deployment approvals and protection ⭐
 - **[CLI Usage](docs/CLI_USAGE.md)** - How to use Terraform CLI with this template
 - **[Local Testing](docs/LOCAL_TESTING.md)** - Test configurations locally without Terraform Cloud
 - **[Workflow Comparison](docs/WORKFLOW_COMPARISON.md)** - GitHub Actions vs VCS-driven: which to choose?

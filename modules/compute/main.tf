@@ -90,7 +90,7 @@ resource "aws_launch_template" "app" {
 
   metadata_options {
     http_endpoint               = "enabled"
-    http_tokens                 = "required"  # Require IMDSv2
+    http_tokens                 = "required" # Require IMDSv2
     http_put_response_hop_limit = 1
   }
 
@@ -118,12 +118,12 @@ resource "aws_launch_template" "app" {
 
 # Auto Scaling Group
 resource "aws_autoscaling_group" "app" {
-  name                = "${var.environment}-${var.app_name}-asg"
-  vpc_zone_identifier = var.private_subnet_ids
-  min_size            = var.min_size
-  max_size            = var.max_size
-  desired_capacity    = var.desired_capacity
-  health_check_type   = "EC2"
+  name                      = "${var.environment}-${var.app_name}-asg"
+  vpc_zone_identifier       = var.private_subnet_ids
+  min_size                  = var.min_size
+  max_size                  = var.max_size
+  desired_capacity          = var.desired_capacity
+  health_check_type         = "EC2"
   health_check_grace_period = 300
 
   launch_template {

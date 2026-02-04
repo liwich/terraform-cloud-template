@@ -143,14 +143,43 @@ terraform apply
 
 ### Add CI/CD Automation
 
-**Option 1: GitHub Actions (Default - Recommended)**
+**Option 1: GitHub Actions with Environment Protection (Recommended)**
 
-1. Add `TF_API_TOKEN` to GitHub Secrets:
+Follow the setup script output or these steps:
+
+1. **Create GitHub Environments** (protects staging/prod):
+   ```
+   Settings → Environments → New environment
+   
+   - dev: No protection (auto-deploy)
+   - staging: Add 1 reviewer
+   - prod: Add 2 reviewers + wait timer
+   ```
+
+2. **Create Terraform Cloud Team Token**:
+   - Go to: https://app.terraform.io/app/[YOUR-ORG]/settings/authentication-tokens
+   - Create team: `github-actions`
+   - Grant team access to workspaces (Write permission)
+   - Create team token (never expires)
+
+3. **Add token to GitHub Secrets**:
    - Repository Settings → Secrets → Actions
    - New secret: `TF_API_TOKEN`
-   - Value: Your Terraform Cloud token
+   - Value: Your team token
 
-2. Push to GitHub - workflows will run automatically!
+4. **Push to GitHub**:
+   ```bash
+   git add .
+   git commit -m "Initial setup"
+   git push origin main
+   ```
+
+**Result:**
+- ✅ Dev deploys automatically
+- ⏸️ Staging waits for approval
+- ⏸️ Prod requires 2 approvals + 10-min wait
+
+📖 **[Detailed Guide: GitHub Environments](docs/GITHUB_ENVIRONMENTS.md)**
 
 **Option 2: VCS-Driven Workflow (Enterprise Alternative)**
 
@@ -160,7 +189,7 @@ Connect Terraform Cloud directly to your repository for native integration:
 - See [VCS Integration Guide](docs/VCS_INTEGRATION.md) for setup
 
 **Both options are production-ready.** Choose based on your needs:
-- GitHub Actions: More flexible, custom workflows
+- GitHub Actions: More flexible, deployment approvals, custom workflows
 - VCS-Driven: Simpler, native Terraform Cloud integration
 
 ### Deploy a Microservice

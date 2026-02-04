@@ -27,22 +27,28 @@ jobs:
       - name: Detect changed environments
         id: set-matrix
         run: |
-          # Get changed files
-          changed_files=$(git diff --name-only origin/main...HEAD)
-          
-          # Initialize environments array
-          environments="[]"
-          
-          # Check each environment
-          for env in dev staging prod; do
-            if echo "$changed_files" | grep -q "^environments/$env/\|^modules/"; then
-              if [ "$environments" = "[]" ]; then
-                environments="[\"$env\"]"
-              else
-                environments=$(echo "$environments" | sed "s/]/, \"$env\"]/")
+          # Check if origin/main exists (not first PR)
+          if ! git rev-parse origin/main >/dev/null 2>&1; then
+            echo "First commit detected - validating only dev environment"
+            environments='["dev"]'
+          else
+            # Get changed files
+            changed_files=$(git diff --name-only origin/main...HEAD)
+            
+            # Initialize environments array
+            environments="[]"
+            
+            # Check each environment
+            for env in dev staging prod; do
+              if echo "$changed_files" | grep -q "^environments/$env/\|^modules/"; then
+                if [ "$environments" = "[]" ]; then
+                  environments="[\"$env\"]"
+                else
+                  environments=$(echo "$environments" | sed "s/]/, \"$env\"]/")
+                fi
               fi
-            fi
-          done
+            done
+          fi
           
           echo "environments=$environments" >> $GITHUB_OUTPUT
           echo "Changed environments: $environments"
@@ -55,10 +61,6 @@ jobs:
     strategy:
       matrix:
         environment: ${{ fromJson(needs.detect-changes.outputs.environments) }}
-    
-    defaults:
-      run:
-        working-directory: environments/${{ matrix.environment }}
     
     steps:
       - name: Checkout code
@@ -77,15 +79,15 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform init
+        run: terraform -chdir=environments/${{ matrix.environment }} init
 
       - name: Terraform Validate
         id: validate
-        run: terraform validate -no-color
+        run: terraform -chdir=environments/${{ matrix.environment }} validate -no-color
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color -input=false
+        run: terraform -chdir=environments/${{ matrix.environment }} plan -no-color -input=false
         continue-on-error: true
 
       - name: Comment PR

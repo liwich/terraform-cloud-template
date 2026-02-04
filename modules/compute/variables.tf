@@ -22,7 +22,7 @@ variable "private_subnet_ids" {
 variable "ami_id" {
   description = "AMI ID for EC2 instances"
   type        = string
-  default     = "ami-0c55b159cbfafe1f0"  # Example - Amazon Linux 2
+  default     = "ami-0c55b159cbfafe1f0" # Example - Amazon Linux 2
 }
 
 variable "instance_type" {
